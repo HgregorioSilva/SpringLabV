@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,9 @@ public class MotoController {//Poderia usar direto o repositorio fazer delete e 
 	private ServiceD service;	
 
 	@JsonView(View.MotoResumo.class)
-	@GetMapping()
+    @GetMapping()
+    @PreAuthorize("isAuthenticated")// checa se a condição não for aceita não entra no metodo
+   //@PostAuthorize só checa no retorno
 	public List<Moto> buscarTodas(){
 		return service.buscarTodasMotos();
 	}
@@ -58,7 +61,8 @@ public class MotoController {//Poderia usar direto o repositorio fazer delete e 
 		//return new ResponseEntity<Moto>(moto, responseHeaders, HttpStatus.CREATED);
 //	}
 	
-	@PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
 	public Moto cadastraNovaMoto(@RequestBody Moto moto) {
 		return service.criarMoto(moto.getPlaca(), moto.getModelo(), "BMW");
 	}
