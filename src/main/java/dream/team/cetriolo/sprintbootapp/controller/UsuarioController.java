@@ -5,15 +5,23 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dream.team.cetriolo.sprintbootapp.entity.Autorizacao;
 import dream.team.cetriolo.sprintbootapp.entity.Usuario;
 import dream.team.cetriolo.sprintbootapp.service.ServiceD;
+
 
 @RestController
 @RequestMapping(value = "/usuario")
@@ -28,7 +36,7 @@ public class UsuarioController {
     @PreAuthorize("isAuthenticated")// checa se a condição não for aceita não entra no metodo
    //@PostAuthorize só checa no retorno
 	public List<Usuario> buscarTodas(){
-		return service.buscarTodasUsuarios();
+        return service.buscarTodosUsuarios();
 	}
 	
 	@JsonView(View.UsuarioCompleta.class)
@@ -40,7 +48,7 @@ public class UsuarioController {
 	@JsonView(View.UsuarioResumo.class)
 	@GetMapping(value="/placa")
 	public Usuario buscarUsuarioPorNome(@RequestParam(value="usuario")String nome) {
-		return service.buscarMotoPorNome(nome);
+		return service.buscarUsuarioPorNome(nome);
 	}
 	
 	//@JsonView({View.MotoResumo.class, View.LojaResumo.class})
@@ -57,7 +65,7 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
 	public Usuario cadastraNovaUsuario(@RequestBody Usuario usuario) {
-		return service.criarUsuario(usuario.getNome(), usuario.getPlaca(), "ROLE_USUARIO");
+        return service.criarUsuario(usuario.getNome(), usuario.getSenha(), "ROLE_USUARIO");
 	}
 	
 	@JsonView( View.AutorizacaoResumo.class)
@@ -74,7 +82,7 @@ public class UsuarioController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity deletar(@PathVariable Long id) {
-		service.delete(id);
+       service.deleteUsuario(id);
 		return ResponseEntity.noContent().build();
 	}
     

@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dream.team.cetriolo.sprintbootapp.entity.Autorizacao;
 import dream.team.cetriolo.sprintbootapp.entity.Loja;
 import dream.team.cetriolo.sprintbootapp.entity.Moto;
+import dream.team.cetriolo.sprintbootapp.entity.Usuario;
 import dream.team.cetriolo.sprintbootapp.exception.RegistroNaoEncontradoExecption;
+import dream.team.cetriolo.sprintbootapp.repository.AutorizacaoRepository;
 import dream.team.cetriolo.sprintbootapp.repository.LojaRepository;
 import dream.team.cetriolo.sprintbootapp.repository.MotoRepository;
+import dream.team.cetriolo.sprintbootapp.repository.UsuarioRepository;
 
 @Service("Service") // trocar para Service
 public class ServiceImpl implements ServiceD{
@@ -21,7 +25,13 @@ public class ServiceImpl implements ServiceD{
 	private LojaRepository lojaRepo;
 	
 	@Autowired
-	private MotoRepository motoRepo;
+    private MotoRepository motoRepo;
+    
+    @Autowired
+	private AutorizacaoRepository autorizacaoRepo;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepo;
 
 	@Override
 	@Transactional//Por que usa transação? Porque como usamos duas operações de banco no caso .save() podemos salvar uma loja no banco e não uma moto ficando assim sem vínculo. 
@@ -90,6 +100,75 @@ public class ServiceImpl implements ServiceD{
 	
 	public void delete(Long id) {
 		motoRepo.deleteById(id);
+    }
+    
+    @Override
+	@Transactional 
+	public Usuario criarUsuario(String nome, String senha, String autorizacao) {
+		Autorizacao aut = autorizacaoRepo.findByNome(autorizacao);
+		if(aut != null) {
+			aut = new Autorizacao();
+			aut.setNome(autorizacao);
+			autorizacaoRepo.save(aut);
+		}
+		Usuario usuario = new Usuario();
+		usuario.setNome(nome);
+		usuario.setSenha(senha);
+		usuario.setAutorizacoes(new HashSet<Autorizacao>());
+		usuario.getAutorizacoes().add(aut);
+		usuarioRepo.save(usuario);
+		return usuario;
+	}
+
+	@Override
+	public List<Usuario> buscarTodosUsuarios(){
+        return usuarioRepo.findAll();
+    }
+	
+	@Override
+	public Usuario buscarUsuarioPorId(Long id){
+		Optional<Usuario> usuarioOp = usuarioRepo.findById(id);
+		if(usuarioOp.isPresent()) {
+			return usuarioOp.get();
+		}
+		throw new RegistroNaoEncontradoExecption("Usuario não encontrado!");
+	}
+	
+	@Override
+	public Usuario buscarUsuarioPorNome(String nome) {
+		Usuario usuario = usuarioRepo.findByNome(nome);
+		if(nome != null) {
+			return usuario;
+		}
+		throw new RegistroNaoEncontradoExecption("Usuario não encontrado!");
+	}
+	
+	@Override
+	public Autorizacao buscarAutorizacaoPorNome(String nome) {
+		Autorizacao autorizacao = autorizacaoRepo.findByNome(nome);
+		if(autorizacao != null) {
+			return autorizacao;
+		}
+		throw new RegistroNaoEncontradoExecption("Autorização não encotrada!");
+	}
+	
+	public Usuario salvar(Usuario usuario){
+		if(!usuario.getAutorizacoes().isEmpty()) {
+			for(Autorizacao autorizacao: usuario.getAutorizacoes()) {
+				if(autorizacao.getId() == null && autorizacaoRepo.findByNome(autorizacao.getNome())==null) {
+					autorizacaoRepo.save(autorizacao);
+				}
+			}
+		}
+		return usuarioRepo.save(usuario);
+	}
+	
+	public Usuario update(Usuario usuario) {
+		return usuarioRepo.save(usuario);
+	}
+	
+	public void deleteUsuario(Long id) {
+		usuarioRepo.deleteById(id);
 	}
 	
 	

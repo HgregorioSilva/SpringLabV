@@ -3,18 +3,23 @@ package dream.team.cetriolo.sprintbootapp.entity;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import dream.team.cetriolo.sprintbootapp.controller.View;
 
+@Entity
+@Table(name = "usr_usuario")
 public class Usuario {
 
     @JsonView(View.UsuarioCompleta.class)
@@ -38,7 +43,7 @@ public class Usuario {
 		joinColumns = { @JoinColumn(name = "usr_id") },
 		inverseJoinColumns = {@JoinColumn(name = "aut_id")})
 	private Set<Autorizacao>autorizacoes;
-	
+    
 	public Long getId() {
 		return id;
 	}

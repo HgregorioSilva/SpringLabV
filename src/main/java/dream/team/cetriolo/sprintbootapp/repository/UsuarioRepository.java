@@ -24,5 +24,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	@Query("select u from Usuario u inner join u.autorizacoes a where a.nome = ?1")
 	public List<Usuario> buscaPorNomeloja(String loja);
 
-	public List<Usuario> findByAutorizacoesNome(String string);
+	public List<Usuario> findByAutorizacoesNome(String nome);
 }
