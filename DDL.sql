@@ -29,8 +29,11 @@ create table moj_moto_loja (
   foreign key loj_loja_fk (loj_id) references loj_loja (loj_id) on delete restrict on update cascade
 );
 
+
+
 insert into mto_moto (mto_placa, mto_modelo) values ('CTF-6176','RD 125');
 
 insert into loj_loja (loj_nome) values ('Yamaha');
 
 insert into moj_moto_loja (mto_id,loj_id) values (1,1);
+

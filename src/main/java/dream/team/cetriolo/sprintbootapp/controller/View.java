@@ -6,6 +6,12 @@ public class View {
 	
 	public static class MotoCompleta extends MotoResumo{}
 	
-	public static class LojaResumo{}
+    public static class LojaResumo{}
+    
+    public static class UsuarioResumo{}
+	
+	public static class UsuarioCompleta extends UsuarioResumo{}
+	
+	public static class AutorizacaoResumo{}
     
 }

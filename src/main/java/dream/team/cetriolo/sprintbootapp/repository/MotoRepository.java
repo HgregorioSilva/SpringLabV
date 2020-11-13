@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+
 import dream.team.cetriolo.sprintbootapp.entity.Moto;
+
 
 public interface MotoRepository extends JpaRepository<Moto,Long> {
 
-    public List<Moto> findByPlacaContainsIgnoreCase(String placa);
+   public List<Moto> findByPlacaContainsIgnoreCase(String nome);
 	
 	public Moto findByPlaca(String placa);
 	
@@ -25,5 +27,4 @@ public interface MotoRepository extends JpaRepository<Moto,Long> {
 	public List<Moto> buscaPorNomeloja(String loja);
 
 	public List<Moto> findByLojasNome(String string);
-    
 }
