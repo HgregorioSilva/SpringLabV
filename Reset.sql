@@ -1,3 +1,6 @@
+drop user 'user'@'localhost';
+drop schema cetriolo;
+
 create schema cetriolo;
  
 use cetriolo;

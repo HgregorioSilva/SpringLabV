@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +33,12 @@ public class ServiceImpl implements ServiceD{
 	private AutorizacaoRepository autorizacaoRepo;
 	
 	@Autowired
-	private UsuarioRepository usuarioRepo;
+    private UsuarioRepository usuarioRepo;
+
+    @Autowired
+    private PasswordEncoder passEncoder;
+    
+
 
 	@Override
 	@Transactional//Por que usa transação? Porque como usamos duas operações de banco no caso .save() podemos salvar uma loja no banco e não uma moto ficando assim sem vínculo. 
@@ -51,7 +58,8 @@ public class ServiceImpl implements ServiceD{
 		return moto;
 	}
 
-	@Override
+    @Override
+    @PreAuthorize("isAuthenticated()")
 	public List<Moto> buscarTodasMotos(){//Não precisava ter feito porque
 		return motoRepo.findAll();
 	}
@@ -113,7 +121,7 @@ public class ServiceImpl implements ServiceD{
 		}
 		Usuario usuario = new Usuario();
 		usuario.setNome(nome);
-		usuario.setSenha(senha);
+		usuario.setSenha(passEncoder.encode(senha));
 		usuario.setAutorizacoes(new HashSet<Autorizacao>());
 		usuario.getAutorizacoes().add(aut);
 		usuarioRepo.save(usuario);

@@ -32,7 +32,7 @@ public class MotoController {//Poderia usar direto o repositorio fazer delete e 
 
 	@JsonView(View.MotoResumo.class)
     @GetMapping()
-    @PreAuthorize("isAuthenticated")// checa se a condição não for aceita não entra no metodo
+   // checa se a condição não for aceita não entra no metodo
    //@PostAuthorize só checa no retorno
 	public List<Moto> buscarTodas(){
 		return service.buscarTodasMotos();
@@ -61,7 +61,7 @@ public class MotoController {//Poderia usar direto o repositorio fazer delete e 
 		//return new ResponseEntity<Moto>(moto, responseHeaders, HttpStatus.CREATED);
 //	}
 	
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @JsonView( View.MotoResumo.class)
     @PostMapping
 	public Moto cadastraNovaMoto(@RequestBody Moto moto) {
 		return service.criarMoto(moto.getPlaca(), moto.getModelo(), "BMW");

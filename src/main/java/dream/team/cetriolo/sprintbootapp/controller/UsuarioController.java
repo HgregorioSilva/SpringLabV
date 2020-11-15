@@ -33,7 +33,7 @@ public class UsuarioController {
 
 	@JsonView(View.UsuarioResumo.class)
     @GetMapping()
-    @PreAuthorize("isAuthenticated")// checa se a condição não for aceita não entra no metodo
+    @PreAuthorize("isAuthenticated()")// checa se a condição não for aceita não entra no metodo
    //@PostAuthorize só checa no retorno
 	public List<Usuario> buscarTodas(){
         return service.buscarTodosUsuarios();
