@@ -2,12 +2,14 @@ package dream.team.cetriolo.sprintbootapp.service;
 
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
+
 import dream.team.cetriolo.sprintbootapp.entity.Autorizacao;
 import dream.team.cetriolo.sprintbootapp.entity.Loja;
 import dream.team.cetriolo.sprintbootapp.entity.Moto;
 import dream.team.cetriolo.sprintbootapp.entity.Usuario;
 
-public interface ServiceD {
+public interface ServiceD extends UserDetailsService{
 	
 	public Moto criarMoto(String placa, String modelo, String loja);
 	

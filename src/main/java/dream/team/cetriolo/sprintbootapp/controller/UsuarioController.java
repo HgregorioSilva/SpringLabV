@@ -62,7 +62,7 @@ public class UsuarioController {
 		//return new ResponseEntity<Moto>(moto, responseHeaders, HttpStatus.CREATED);
 //	}
 	
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+   
     @PostMapping
 	public Usuario cadastraNovaUsuario(@RequestBody Usuario usuario) {
         return service.criarUsuario(usuario.getNome(), usuario.getSenha(), "ROLE_USUARIO");
