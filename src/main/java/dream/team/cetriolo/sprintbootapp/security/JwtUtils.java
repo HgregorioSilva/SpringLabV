@@ -38,8 +38,8 @@ public class JwtUtils {
         String credentialsJson = Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody().get("userDetails",
                 String.class);
         Login usuario = mapper.readValue(credentialsJson, Login.class);
-        return (User) User.builder().username(usuario.getUsername()).password("secret")
-                .authorities(usuario.getAutorizacao()).build();
+        return (User) User.builder().username(usuario.getUsername()).password("secret").authorities(usuario.getAutorizacao()).build();
+    
     }
 
 }

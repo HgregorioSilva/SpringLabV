@@ -8,6 +8,8 @@ public class Login {
 
     private String token;
 
+    private String Autorizacao;
+
     public String getUsername() {
         return username;
     }
@@ -30,5 +32,15 @@ public class Login {
 
     public void setToken(String token) {
         this.token = token;
-    }    
+    }
+
+    public String getAutorizacao() {
+        return Autorizacao;
+    }
+
+    public void setAutorizacao(String autorizacao) {
+        Autorizacao = autorizacao;
+    }
+    
+    
 }
