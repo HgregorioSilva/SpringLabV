@@ -8,15 +8,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.boot.json.JsonParseException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtUtils {
 
-    private static final String KEY = "spring.jwt.sec";//não deveria estar direto no código
+    private static final String KEY = "spring.jwt.sec";
 
     public static String generateToken(Authentication usuario) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -27,19 +29,23 @@ public class JwtUtils {
         }
         String usuarioJson = mapper.writeValueAsString(usuarioSemSenha);
         Date agora = new Date();
-        Long hora = 1000L * 60L * 60L; // Uma hora em milisegundos
+        Long hora = 1000L * 60L * 60L; // Uma hora
         return Jwts.builder().claim("userDetails", usuarioJson).setIssuer("br.gov.sp.fatec")
                 .setSubject(usuario.getName()).setExpiration(new Date(agora.getTime() + hora))
                 .signWith(SignatureAlgorithm.HS512, KEY).compact();
     }
 
-    public static User parseToken(String token) throws JsonParseException, JsonMappingException, IOException {
+    public static Authentication parseToken(String token) throws JsonParseException, JsonMappingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
+        // captura informacoes do usuario do token
         String credentialsJson = Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody().get("userDetails",
                 String.class);
+        // constroi um objeto Login com base no json
         Login usuario = mapper.readValue(credentialsJson, Login.class);
-        return (User) User.builder().username(usuario.getUsername()).password("secret").authorities(usuario.getAutorizacao()).build();
-    
+        UserDetails userDetails = User.builder().username(usuario.getUsername()).password("secret")
+                .authorities(usuario.getAutorizacao()).build();
+        return new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword(),
+                userDetails.getAuthorities());
     }
 
 }
