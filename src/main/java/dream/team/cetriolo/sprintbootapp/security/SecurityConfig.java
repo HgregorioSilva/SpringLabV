@@ -12,37 +12,45 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // prePostEnabled onde anotar está seguro
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    
-    @Autowired
+     @Autowired // Irá pegar o segurancaService
     private UserDetailsService userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().httpBasic().and()// metodo de segurança por token, o sping criando as paginas, está
-                                               // desabilitado
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);// STATELESSfaz a requisição
-                                                                                            // e joga a memoria fora
+        http.csrf().disable().
+                    addFilterBefore(new JwtAuthenticationFilter(),
+                                    UsernamePasswordAuthenticationFilter.class) // Rodando o filtro JWT antes do filtro do spring
+                // this disables session creation on Spring Security (para cada página, gera um
+                // token e confirma o acesso...)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
+    // Configurando como o spring faz a autenticação (LOGIN)
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {//como o spring faz login
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // Toda vez que receber um usuario e senha, use esse serviço para buscar o
+        // usuário...
         auth.userDetailsService(userDetailsService);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoderBean() {
-        return new BCryptPasswordEncoder();
+    // Essa tag pega o objeto e disponibiliza ele no spring para conseguirmos
+    // utilizar o autowired (usar em outos lugares)
+    @Bean // Utilizo essa tag em classes que não são minhas...
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // Indica que irei utilizar este padrão de encoder...
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
+    @Bean // O método já existe, mas uso o Bean para deixar ele exposto, disponível pra
+          // uso
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
 }

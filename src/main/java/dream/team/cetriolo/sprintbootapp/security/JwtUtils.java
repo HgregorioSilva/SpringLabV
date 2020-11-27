@@ -18,33 +18,33 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtUtils {
 
-    private static final String KEY = "spring.jwt.sec";
+   private static final String KEY = "spring.jwt.sec"; // Chave para validar o token
 
     public static String generateToken(Authentication usuario) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Login usuarioSemSenha = new Login();
         usuarioSemSenha.setUsername(usuario.getName());
         if (!usuario.getAuthorities().isEmpty()) {
-            usuarioSemSenha.setAutorizacao(usuario.getAuthorities().iterator().next().getAuthority());
+            usuarioSemSenha.setAutorizacao(usuario.getAuthorities().iterator().next().getAuthority()); // Pega a 1º e
+                                                                                                       // salva
         }
-        String usuarioJson = mapper.writeValueAsString(usuarioSemSenha);
+
+        String usuarioJson = mapper.writeValueAsString(usuarioSemSenha); // Gerar um JSON
         Date agora = new Date();
-        Long hora = 1000L * 60L * 60L; // Uma hora
-        return Jwts.builder().claim("userDetails", usuarioJson).setIssuer("br.gov.sp.fatec")
+        Long hora = 1000L * 60L * 60L; // Uma hora em miliseconds
+        return Jwts.builder().claim("userDetails", usuarioJson).setIssuer("dream.team.cetriolo")
                 .setSubject(usuario.getName()).setExpiration(new Date(agora.getTime() + hora))
                 .signWith(SignatureAlgorithm.HS512, KEY).compact();
     }
 
     public static Authentication parseToken(String token) throws JsonParseException, JsonMappingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        // captura informacoes do usuario do token
         String credentialsJson = Jwts.parser().setSigningKey(KEY).parseClaimsJws(token).getBody().get("userDetails",
                 String.class);
-        // constroi um objeto Login com base no json
         Login usuario = mapper.readValue(credentialsJson, Login.class);
-        UserDetails userDetails = User.builder().username(usuario.getUsername()).password("secret")
+        UserDetails userDetails = (User) User.builder().username(usuario.getUsername()).password("secret")
                 .authorities(usuario.getAutorizacao()).build();
-        return new UsernamePasswordAuthenticationToken(usuario.getUsername(), usuario.getPassword(),
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(),
                 userDetails.getAuthorities());
     }
 

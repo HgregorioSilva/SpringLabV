@@ -6,9 +6,9 @@ public class Login {
 
     private String password;
 
-    private String token;
-
     private String Autorizacao;
+
+    private String token;
 
     public String getUsername() {
         return username;
