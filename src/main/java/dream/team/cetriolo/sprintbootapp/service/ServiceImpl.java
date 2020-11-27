@@ -69,6 +69,7 @@ public class ServiceImpl implements ServiceD {
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN', 'USUARIO')")
     public Moto buscarMotoPorId(Long id) {
         Optional<Moto> motoOp = motoRepo.findById(id);
         if (motoOp.isPresent()) {
