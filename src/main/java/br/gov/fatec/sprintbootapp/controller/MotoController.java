@@ -30,7 +30,7 @@ public class MotoController {//Poderia usar direto o repositorio fazer delete e 
 	@Autowired
 	private ServiceD service;	
 
-	@JsonView(View.MotoResumo.class)
+	@JsonView(View.MotoCompleta.class)
     @GetMapping()
    // checa se a condição não for aceita não entra no metodo
    //@PostAuthorize só checa no retorno
