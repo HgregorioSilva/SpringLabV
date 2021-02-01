@@ -1,10 +1,10 @@
-create schema cetriolo;
+create schema harley;
  
-use cetriolo;
+use harley;
 
 create user 'user'@'localhost' identified by 'fatec';
 
-grant select, insert, delete, update on cetriolo.* to user@'localhost';
+grant select, insert, delete, update on harley.* to user@'localhost';
 
 create table mto_moto (
   mto_id bigint unsigned not null auto_increment,
@@ -63,4 +63,3 @@ insert into aut_autorizacao (aut_nome) values ('ROLE_ADMIN');
 insert into moj_moto_loja (mto_id,loj_id) values (1,1);
 
 insert into uau_usuario_autorizacao (usr_id,aut_id) values (1,1);
-

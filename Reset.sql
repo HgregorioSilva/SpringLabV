@@ -1,13 +1,13 @@
 drop user 'user'@'localhost';
 drop schema cetriolo;
 
-create schema cetriolo;
+create schema harley;
  
-use cetriolo;
+use harley;
 
 create user 'user'@'localhost' identified by 'fatec';
 
-grant select, insert, delete, update on cetriolo.* to user@'localhost';
+grant select, insert, delete, update on harley.* to user@'localhost';
 
 create table mto_moto (
   mto_id bigint unsigned not null auto_increment,
