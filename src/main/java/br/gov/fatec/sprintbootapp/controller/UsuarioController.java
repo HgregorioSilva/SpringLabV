@@ -31,7 +31,7 @@ public class UsuarioController {
     @Autowired
 	private ServiceD service;	
 
-	@JsonView(View.UsuarioResumo.class)
+	@JsonView(View.UsuarioCompleta.class)
     @GetMapping()
     @PreAuthorize("isAuthenticated()")// checa se a condição não for aceita não entra no metodo
    //@PostAuthorize só checa no retorno

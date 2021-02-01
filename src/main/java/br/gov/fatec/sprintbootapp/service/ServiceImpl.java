@@ -63,13 +63,13 @@ public class ServiceImpl implements ServiceD {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USUARIO')")
     public List<Moto> buscarTodasMotos() {// Não precisava ter feito porque
         return motoRepo.findAll();
     }
 
     @Override
-    @PreAuthorize("hasAnyRole('ADMIN', 'USUARIO')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USUARIO')")
     public Moto buscarMotoPorId(Long id) {
         Optional<Moto> motoOp = motoRepo.findById(id);
         if (motoOp.isPresent()) {
@@ -108,6 +108,7 @@ public class ServiceImpl implements ServiceD {
         return motoRepo.save(moto);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USUARIO')")
     public Moto update(Moto moto) {
         return motoRepo.save(moto);
     }

@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CetrioloApplication {
+public class LabVApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CetrioloApplication.class, args);
+		SpringApplication.run(LabVApplication.class, args);
 	}
 
 }
